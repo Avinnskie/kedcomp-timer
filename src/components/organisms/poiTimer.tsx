@@ -1,10 +1,11 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
 export default function POITimer() {
   const POI_DURATION = 15;
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -19,6 +20,7 @@ export default function POITimer() {
           }
           return prev - 1;
         });
+        setElapsedTime((prev) => prev + 1);
       }, 1000);
     }
 
@@ -27,7 +29,14 @@ export default function POITimer() {
 
   const startPOI = () => {
     setTimeLeft(POI_DURATION);
+    setElapsedTime(0);
     setIsRunning(true);
+  };
+
+  const resetPOI = () => {
+    setIsRunning(false);
+    setTimeLeft(0);
+    setElapsedTime(0);
   };
 
   const radius = 120;
@@ -59,17 +68,25 @@ export default function POITimer() {
             strokeLinecap="round"
           />
         </svg>
-        <div className="absolute top-1/2 left-1/2 transform text-black -translate-x-4 -translate-y-2 text-4xl font-semibold">
-          {timeLeft > 0 ? `${timeLeft}s` : '--'}
+        <div className="absolute top-1/2 left-1/2 transform text-black -translate-x-6 -translate-y-4 text-4xl font-semibold">
+          {timeLeft > 0 ? `${timeLeft}s` : "--"}
         </div>
       </div>
 
-      <button
-        onClick={startPOI}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Start POI
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={startPOI}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Start POI
+        </button>
+        <button
+          onClick={resetPOI}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Reset
+        </button>
+      </div>
     </div>
   );
 }
